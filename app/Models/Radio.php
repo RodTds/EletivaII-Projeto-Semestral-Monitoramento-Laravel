@@ -31,18 +31,6 @@ class Radio extends Model
     }
 
 
-public function getStatusAttribute()
-{
-    $cacheKey = "radio_status_{$this->id}";
-
-    if (!Cache::has($cacheKey)) {
-        return 'nao_monitorado';
-    }
-
-    $status = Cache::get($cacheKey);
-
-    return in_array($status, ['online', 'offline']) ? $status : 'nao_monitorado';
-}
 
 
 }

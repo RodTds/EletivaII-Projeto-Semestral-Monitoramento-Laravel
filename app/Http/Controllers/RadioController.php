@@ -113,25 +113,25 @@ class RadioController extends Controller
     }
 
     // ✅ Endpoint que o MikroTik chama via Netwatch
-    public function updateStatus(Request $request)
-    {
-        $ip = $request->get('ip');
-        $status = $request->get('status');
+   public function updateStatus(Request $request)
+{
+    $ip = $request->get('ip');
+    $status = $request->get('status'); // 'online' ou 'offline'
 
-        $radio = Radio::where('ip', $ip)->first();
+    $radio = Radio::where('ip', $ip)->first();
 
-        if ($radio) {
-            $radio->status = $status;
-            $radio->save();
+    if ($radio) {
+        // Atualiza banco
+        $radio->status = $status;
+        $radio->save();
 
-            Log::info("Status atualizado via Netwatch", [
-                'ip' => $ip,
-                'status' => $status
-            ]);
+        // Atualiza cache
+        $cacheKey = "radio_status_{$radio->id}";
+        Cache::put($cacheKey, $status, now()->addMinutes(5)); // expira em 5 min
 
-            return response('OK', 200);
-        }
-
-        return response('Rádio não encontrado', 404);
+        return response('OK', 200);
     }
+
+    return response('Rádio não encontrado', 404);
+}
 }

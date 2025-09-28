@@ -30,7 +30,7 @@
     </div>
 
     <div class="text-center mt-4">
-        <button type="submit" class="btn btn-success px-4">Salvar Alterações</button>
+        <button type="submit" class="btn btn-success px-4">Aplicar Alterações</button>
         <a href="#" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</a>
     </div>
 </form>

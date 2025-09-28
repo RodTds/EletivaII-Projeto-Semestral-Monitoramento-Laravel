@@ -15,6 +15,68 @@ class PppoeController extends Controller
             'user' => env('MIKROTIK_USER'),
             'pass' => env('MIKROTIK_PASS'),
         ]);
+     
+    }
+
+    public function index()
+    {
+        $client = $this->mikrotikClient();
+
+        // Busca todos os secrets (clientes cadastrados)
+        $querySecrets = new Query('/ppp/secret/print');
+        $secrets = $client->query($querySecrets)->read();
+
+        // Busca todos os ativos online
+        $queryActive = new Query('/ppp/active/print');
+        
+        $active = $client->query($queryActive)->read();
+        dd($active);
+     
+        
+        // Monta um array para a view
+        $users = [];
+        foreach ($secrets as $secret) {
+            $user = [
+                'name'     => $secret['name'] ?? '',
+                'password' => $secret['password'] ?? '',
+                'profile'  => $secret['profile'] ?? '',
+                'status'   => 'Offline',
+                'ip'       => null,
+                'uptime'   => null,
+            ];
+
+            // Verifica se está online no array $active
+           $users = [];
+foreach ($secrets as $secret) {
+    $user = [
+        'name'     => $secret['name'] ?? '',
+        'password' => $secret['password'] ?? '',
+        'profile'  => $secret['profile'] ?? '',
+        'status'   => 'Offline',
+        'ip'       => null,
+        'uptime'   => null,
+    ];
+
+    foreach ($active as $act) {
+        if ($act['name'] === $secret['name']) {
+            $user['status'] = 'Online';
+            $user['ip']     = $act['address'] ?? null;
+            $user['uptime'] = $act['uptime'] ?? $act['session-time'] ?? $act['time'] ?? null;
+            break;
+        }
+    }
+
+    $users[] = $user;
+}
+
+return view('pppoe.index', compact('users'));
+
+
+
+            $users[] = $user;
+        }
+         
+        return view('pppoe.index', compact('users'));
     }
 
     public function create()
@@ -40,9 +102,9 @@ class PppoeController extends Controller
 
         try {
             $client->query($query)->read();
-            return redirect()->route('pppoe.create')->with('success', 'Cliente PPPoE adicionado com sucesso!');
+            return redirect()->route('pppoe.index')->with('success', 'Cliente PPPoE adicionado com sucesso!');
         } catch (\Exception $e) {
-            return redirect()->route('pppoe.create')->with('error', 'Erro ao adicionar cliente: ' . $e->getMessage());
+            return redirect()->route('pppoe.index')->with('error', 'Erro ao adicionar cliente: ' . $e->getMessage());
         }
     }
 }

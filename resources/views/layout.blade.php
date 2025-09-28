@@ -12,18 +12,19 @@
   <style>
     body {
       background-color: #f8f8f8;
+      margin: 0;
     }
-.thead-sidebar {
-  background-color: #1a2630;
-  color: #ffffff;
-}
 
+    /* Sidebar fixa */
     .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 220px; /* mesma largura mínima usada antes */
+      height: 100vh;
       background-color: #1a2630;
       color: #50b948;
-      height: 100vh;
       padding: 20px;
-      min-width: 220px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -94,36 +95,35 @@
       text-decoration: none;
     }
 
+    /* Conteúdo principal com scroll */
+    main {
+      margin-left: 220px; /* mesma largura da sidebar */
+      padding: 20px;
+    }
   </style>
 </head>
 <body>
-  <div class="d-flex">
-    <nav class="sidebar d-flex flex-column">
-      <div class="menu">
-        <h1>Telecom Net</h1>
-        <h2>Monitoramento</h2>
+  <!-- Sidebar fixa -->
+  <nav class="sidebar d-flex flex-column">
+    <div class="menu">
+      <h1>Telecom Net</h1>
+      <h2>Monitoramento</h2>
 
-        <a href="{{ route('radio.index') }}" class="menu-item">📊 Estado da Rede</a>
-        <a href="{{ route('radio.create') }}" class="menu-item">📶 Radio</a>
-        <a href="{{ route('ptp.create') }}" class="menu-item">🌐 PTP</a>
-        <a href="{{ route('pppoe') }}" class="menu-item"><i class="bi bi-person-fill icon-blue"></i> Clientes PPPoE</a>
+      <a href="{{ route('radio.index') }}" class="menu-item">📊 Estado da Rede</a>
+      <a href="{{ route('radio.create') }}" class="menu-item">📶 Rádio</a>
+      <a href="{{ route('ptp.create') }}" class="menu-item">🌐 PTP</a>
+      <a href="{{ route('pppoe') }}" class="menu-item"><i class="bi bi-person-fill icon-blue"></i> Clientes PPPoE</a>
 
-        <!-- Reinicializar -->
-        <a href="#" class="menu-item">↻ Reinicializar o Sistema</a>
-      </div>
+      <a href="#" class="menu-item">↻ Reinicializar o Sistema</a>
+    </div>
+  </nav>
 
-      <!-- Botão atualizar -->
-      <button class="btn-atualizar" type="button">Atualizar</button>
-    </nav>
-
-    <!-- Área de conteúdo -->
-    <main class="flex-grow-1 p-4">
-      @yield('conteudo')
-    </main>
-  </div>
+  <!-- Área de conteúdo -->
+  <main>
+    @yield('conteudo')
+  </main>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
- 
 </body>
 </html>
